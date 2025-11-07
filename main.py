@@ -7,10 +7,16 @@ from filterpy.kalman import KalmanFilter
 from scipy.optimize import linear_sum_assignment
 from ultralytics import YOLO
 
-VIDEO_SOURCE = "Videos/Entry Day.mp4"   # put rtsp/http/webcam index (0) here
+import torch
+print("Cuda available: ", torch.cuda.is_available())
+print("PyTorch available: ", torch.__version__)
+
+# VIDEO_SOURCE = "rtsp://admin:NCAI%401024@192.168.1.64:554/Streaming/Channels/101"
+VIDEO_SOURCE = "Videos/Entry Night.mp4"
 CONF_THRESH = 0.35
-FORCED_WIDTH = 1920
-FORCED_HEIGHT = 1080
+IOU_THRESH = 0.2
+# FORCED_WIDTH = 1920 * 2
+# FORCED_HEIGHT = 1080 * 2
 
 
 # ----------------------------
@@ -75,7 +81,7 @@ class Track:
 
 
 class DeepSortTracker:
-    def __init__(self, max_age=25, iou_threshold=0.3):
+    def __init__(self, max_age=10, iou_threshold=0.1):
         self.next_id = 1
         self.tracks = []
         self.max_age = max_age
@@ -153,9 +159,9 @@ while True:
     if not ret:
         break
 
-    frame = cv2.resize(frame, (FORCED_WIDTH, FORCED_HEIGHT))
+    # frame = cv2.resize(frame, (FORCED_WIDTH, FORCED_HEIGHT))
 
-    results = model(frame, imgsz=320, conf=CONF_THRESH)[0]
+    results = model(frame, conf=CONF_THRESH, iou=IOU_THRESH)[0]
 
     detections = []
     for box in results.boxes:
@@ -176,7 +182,7 @@ while True:
 
     cv2.namedWindow("Vehicle Tracking (YOLO + DeepSORT)", cv2.WINDOW_NORMAL)
     cv2.imshow("Vehicle Tracking (YOLO + DeepSORT)", frame)
-    if cv2.waitKey(1) & 0xFF == ord('q'):
+    if cv2.waitKey(0) & 0xFF == ord('q'):
         break
 
 cap.release()
