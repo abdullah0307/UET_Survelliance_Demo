@@ -1,0 +1,14 @@
+easyocr==1.7.2
+numpy==2.2.6
+opencv-python==4.12.0.88
+opencv-python-headless==4.12.0.88
+paddleocr==3.3.2
+paddlepaddle==3.2.2
+torch==2.5.1
+torchaudio==2.5.1
+torchvision==0.20.1
+tqdm==4.67.1
+ultralytics==8.3.225
+opencv-contrib-python
+# conda install pytorch==2.5.1 torchvision==0.20.1 torchaudio==2.5.1  pytorch-cuda=11.8 -c pytorch -c nvidia
+
